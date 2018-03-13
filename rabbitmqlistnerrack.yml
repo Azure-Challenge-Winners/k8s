@@ -1,0 +1,27 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: rabbitmqlistnerrack-deployment
+  labels:
+    app: rabbitmqlistnerrack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmqlistnerrack
+  template:
+    metadata:
+      labels:
+        app: rabbitmqlistnerrack
+    spec:
+      containers:
+        - name: rabbitmqlistnerrack
+          image: shanepeckham/rabbitmqlistenerack:v6
+          env:
+            - name: RABBITMQHOST
+              value: amqp://intentional-camel-rabbitmq.default.svc.cluster.local:5672
+            - name: TEAMNAME
+              value: team5
+            - name: PROCESSENDPOINT
+              value: http://10.244.5.24:8080/v1/order
+---

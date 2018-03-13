@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: fulfill-order-deployment
+  labels:
+    app: fulfill-order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fulfill-order
+  template:
+    metadata:
+      labels:
+        app: fulfill-order
+    spec:
+      containers:
+        - name: fulfill-order
+          image: shanepeckham/fulfillorderack:v6
+          env:
+            - name: MONGOHOST
+              value: mongodb://enervated-unicorn-mongodb.default.svc.cluster.local:27017
+            - name: TEAMNAME
+              value: team5
+          volumeMounts:
+          - name: azurefileshare
+            mountPath: /storage
+      volumes:
+      - name: azurefileshare
+        azureFile:
+          secretName: volume-azurefile-storage-secret
+          shareName: storage
+          readOnly: false
