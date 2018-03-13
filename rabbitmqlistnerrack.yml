@@ -23,5 +23,5 @@ spec:
             - name: TEAMNAME
               value: team5
             - name: PROCESSENDPOINT
-              value: http://10.244.5.24:8080/v1/order
+              value: http://fulfill-order-deployment.default.svc.cluster.local:8080/v1/order
 ---

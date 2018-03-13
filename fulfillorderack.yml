@@ -19,13 +19,22 @@ spec:
           image: shanepeckham/fulfillorderack:v6
           env:
             - name: MONGOHOST
-              value: mongodb://enervated-unicorn-mongodb.default.svc.cluster.local:27017
+              value: mongodb://team5orders:5lk87DLIPQpHUSkz1EE9oEmQjnDsTtRgj554s6YEvxPPBeya4gTjsBUzC5oUtoZ7e7fvxFELsSd4lmIAJW3bdw==@team5orders.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
             - name: TEAMNAME
               value: team5
           volumeMounts:
-          - mountPath: "/mnt/azure"
-            name: volume
+          - mountPath: "/orders"
+            name: logs
       volumes:
-        - name: volume
+        - name: logs
           persistentVolumeClaim:
-            claimName: azurefile
+            claimName: logs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fulfill-order
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
