@@ -24,6 +24,8 @@ spec:
               value: mongodb://enervated-unicorn-mongodb.default.svc.cluster.local
             - name: TEAMNAME
               value: team5  
+            - name: RABBITMQHOST
+              value: amqp://user:iLTAGPJBQ7@intentional-camel-rabbitmq.default.svc.cluster.local:5672  
 ---
 apiVersion: v1
 kind: Service
@@ -31,6 +33,13 @@ metadata:
   name: order-capture
 spec:
   ports:
-    - port: 8080
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
   selector:
     app: order-capture
+  type: LoadBalancer  
+status:
+  loadBalancer:
+    ingress:
+      - ip: 52.168.52.12
