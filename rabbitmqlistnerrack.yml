@@ -19,7 +19,7 @@ spec:
           image: shanepeckham/rabbitmqlistenerack:v6
           env:
             - name: RABBITMQHOST
-              value: amqp://intentional-camel-rabbitmq.default.svc.cluster.local:5672
+              value: amqp://user:iLTAGPJBQ7@intentional-camel-rabbitmq.default.svc.cluster.local:5672
             - name: TEAMNAME
               value: team5
             - name: PROCESSENDPOINT

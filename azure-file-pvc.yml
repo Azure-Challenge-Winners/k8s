@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fullfillorderlogs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fullfillorderlogs
+  resources:
+    requests:
+      storage: 5Gi

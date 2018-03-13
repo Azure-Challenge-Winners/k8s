@@ -23,11 +23,9 @@ spec:
             - name: TEAMNAME
               value: team5
           volumeMounts:
-          - name: azurefileshare
-            mountPath: /storage
+          - mountPath: "/mnt/azure"
+            name: volume
       volumes:
-      - name: azurefileshare
-        azureFile:
-          secretName: volume-azurefile-storage-secret
-          shareName: storage
-          readOnly: false
+        - name: volume
+          persistentVolumeClaim:
+            claimName: azurefile
