@@ -23,32 +23,23 @@ spec:
       containers:
         - name: fulfill-order
           image: shanepeckham/fulfillorderack:v6
-          securityContext:
-            runAsNonRoot: true
-            capabilities:
-              drop:
-               - SETUID
-               - SETGID
-            resources:
-              limits:
-                memory: "100Mi"
-                cpu: 100m
-              requests:
-                memory: "50Mi"
-                cpu: 100m
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "100Mi"
+              cpu: 100m
+            requests:
+              memory: "50Mi"
+              cpu: 100m
           env:
             - name: MONGOHOST
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb-host-secret
-                  key: mongodb-host-secret
+              value: mongodb://team5orders:5lk87DLIPQpHUSkz1EE9oEmQjnDsTtRgj554s6YEvxPPBeya4gTjsBUzC5oUtoZ7e7fvxFELsSd4lmIAJW3bdw==@team5orders.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: mongodb-host-secret
+              #     key: mongodb-host-secret
             - name: TEAMNAME
               value: team5
-          livenessProbe:
-            tcpSocket:
-             port: 8081
-            initialDelaySeconds: 30
-            timeoutSeconds: 1
           volumeMounts:
           - mountPath: "/orders"
             name: logs
