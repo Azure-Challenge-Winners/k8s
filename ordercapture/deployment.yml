@@ -23,19 +23,19 @@ spec:
       containers:
         - name: order-capture
           image: shanepeckham/captureorderack:v6
-          securityContext:
-            runAsNonRoot: true
-            capabilities:
-              drop:
-               - SETUID
-               - SETGID
-          resources:
-           limits:
-            memory: "100Mi"
-            cpu: 100m
-           requests:
-            memory: "50Mi"
-            cpu: 100m
+          # securityContext:
+          #   runAsNonRoot: true
+          #   capabilities:
+          #     drop:
+          #      - SETUID
+          #      - SETGID
+          # resources:
+          #  limits:
+          #   memory: "5Gi"
+          #   cpu: 100m
+          #  requests:
+          #   memory: "2Gi"
+          #   cpu: 100m
           ports:
             - containerPort: 8080
           env:
@@ -51,8 +51,3 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-host-secret
                   key: rabbitmq-host-secret
-          livenessProbe:
-            tcpSocket:
-             port: 8080
-            initialDelaySeconds: 30
-            timeoutSeconds: 1
