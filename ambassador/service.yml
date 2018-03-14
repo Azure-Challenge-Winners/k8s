@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: ambassador
+  name: ambassador
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v0
+      kind:  Mapping
+      name:  order_mapping
+      prefix: /
+      service: order-capture:8080
+      host_rewrite: k8schallengeendpoint.eastus.cloudapp.azure.com
+      # ---
+      # apiVersion: ambassador/v0
+      # kind:  Mapping
+      # name:  order_mapping
+      # prefix: /order/
+      # service: order-capture:8080
+      # host_rewrite: k8schallengeendpoint.eastus.cloudapp.azure.com
+      # ---
+      # apiVersion: ambassador/v0
+      # kind:  Mapping
+      # name:  swagger_mapping
+      # prefix: /swagger/
+      # service: order-capture:8080
+      # host_rewrite: k8schallengeendpoint.eastus.cloudapp.azure.com
+
+spec:
+  type: LoadBalancer
+  ports:
+  - name: ambassador
+    port: 80
+    targetPort: 80
+  selector:
+    service: ambassador
