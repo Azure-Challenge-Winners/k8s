@@ -1,0 +1,58 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: fulfill-order-deployment
+  labels:
+    app: fulfill-order
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fulfill-order
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 2
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: fulfill-order
+    spec:
+      containers:
+        - name: fulfill-order
+          image: shanepeckham/fulfillorderack:v6
+          securityContext:
+            runAsNonRoot: true
+            capabilities:
+              drop:
+               - SETUID
+               - SETGID
+            resources:
+              limits:
+                memory: "100Mi"
+                cpu: 100m
+              requests:
+                memory: "50Mi"
+                cpu: 100m
+          env:
+            - name: MONGOHOST
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-host-secret
+                  key: mongodb-host-secret
+            - name: TEAMNAME
+              value: team5
+          livenessProbe:
+            tcpSocket:
+             port: 8081
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+          volumeMounts:
+          - mountPath: "/orders"
+            name: logs
+      volumes:
+        - name: logs
+          persistentVolumeClaim:
+            claimName: logs
