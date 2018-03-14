@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -5,10 +6,15 @@ metadata:
   labels:
     app: fulfill-order
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: fulfill-order
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 2
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -17,9 +23,20 @@ spec:
       containers:
         - name: fulfill-order
           image: shanepeckham/fulfillorderack:v6
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: 100m
+            requests:
+              memory: "256Mi"
+              cpu: 100m
           env:
             - name: MONGOHOST
-              value: mongodb://team5orders:5lk87DLIPQpHUSkz1EE9oEmQjnDsTtRgj554s6YEvxPPBeya4gTjsBUzC5oUtoZ7e7fvxFELsSd4lmIAJW3bdw==@team5orders.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-host-secret
+                  key: mongodb-host-secret
             - name: TEAMNAME
               value: team5
           volumeMounts:
@@ -29,13 +46,3 @@ spec:
         - name: logs
           persistentVolumeClaim:
             claimName: logs
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: fulfill-order
-spec:
-  ports:
-    - protocol: TCP
-      port: 8081
-      targetPort: 8080

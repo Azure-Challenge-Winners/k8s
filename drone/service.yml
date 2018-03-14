@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "drone-server-svc"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: "drone"
+    role: "server"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: "drone-agent-svc"
+spec:
+  ports:
+  - name:
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: "drone"
+    role: "server"

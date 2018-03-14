@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: eventlistener-deployment
+  labels:
+    app: eventlistener
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eventlistener
+  template:
+    metadata:
+      labels:
+        app: eventlistener
+    spec:
+      containers:
+        - name: eventlistener
+          image: shanepeckham/rabbitmqlistenerack:v6
+          # securityContext:
+          #   runAsNonRoot: true
+          #   capabilities:
+          #     drop:
+          #      - SETUID
+          #      - SETGID
+          resources:
+           limits:
+            memory: "512Mi"
+            cpu: 100m
+           requests:
+            memory: "256Mi"
+            cpu: 100m
+          env:
+            - name: RABBITMQHOST
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-host-secret
+                  key: rabbitmq-host-secret
+            - name: TEAMNAME
+              value: team5
+            - name: PROCESSENDPOINT
+              value: http://fulfill-order:8081/v1/order

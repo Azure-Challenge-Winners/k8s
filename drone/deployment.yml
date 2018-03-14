@@ -1,0 +1,78 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "drone-server"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: "drone-server"
+      labels:
+        app: "drone"
+        role: "server"
+    spec:
+      containers:
+      - name: "server"
+        image: "drone/drone:0.8"
+        env:
+          - name: DRONE_HOST
+            value: "http://localhost"
+          - name: DRONE_OPEN
+            value: "true"
+          - name: DRONE_GITHUB
+            value: "true"
+          - name: DRONE_GITHUB_CLIENT
+            value: "d8034f5534999ec9116f"
+          - name: DRONE_GITHUB_SECRET
+            value: "a438a876c2ade9c5f524b4d7157cf49467107ba6"
+          - name: DRONE_SECRET
+            value: "dFhMtnfxyFPUvMHN9woO"
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "100m"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8000
+        volumeMounts:
+          - mountPath: /var/lib/drone/
+            name: "drone-server-storage"
+      volumes:
+      - name: "drone-server-storage"
+        hostPath:
+          path: /var/lib/drone
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: "drone-agent"
+spec:
+  replicas: 2
+  template:
+    metadata:
+      name: "drone-agent"
+      labels:
+        app: "drone"
+        role: "agent"
+    spec:
+      containers:
+      - name: "agent"
+        image: "harshals/drone-agent:1.0"
+        env:
+          - name: DRONE_SERVER
+            value: "ws://drone-agent-svc:8000/ws/broker"
+          - name: DRONE_SECRET
+            value: "Drone_11"
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "100m"
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: "docker-sock"
+      volumes:
+      - name: "docker-sock"
+        hostPath:
+          path: /var/run/docker.sock
