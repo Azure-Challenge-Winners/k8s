@@ -1,5 +1,5 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: fulfill-order-deployment
@@ -26,18 +26,17 @@ spec:
           imagePullPolicy: Always
           resources:
             limits:
-              memory: "100Mi"
+              memory: "512Mi"
               cpu: 100m
             requests:
-              memory: "50Mi"
+              memory: "256Mi"
               cpu: 100m
           env:
             - name: MONGOHOST
-              value: mongodb://team5orders:5lk87DLIPQpHUSkz1EE9oEmQjnDsTtRgj554s6YEvxPPBeya4gTjsBUzC5oUtoZ7e7fvxFELsSd4lmIAJW3bdw==@team5orders.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
-              # valueFrom:
-              #   secretKeyRef:
-              #     name: mongodb-host-secret
-              #     key: mongodb-host-secret
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-host-secret
+                  key: mongodb-host-secret
             - name: TEAMNAME
               value: team5
           volumeMounts:

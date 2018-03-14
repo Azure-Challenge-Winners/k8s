@@ -18,18 +18,18 @@ spec:
       containers:
         - name: eventlistener
           image: shanepeckham/rabbitmqlistenerack:v6
-          securityContext:
-            runAsNonRoot: true
-            capabilities:
-              drop:
-               - SETUID
-               - SETGID
+          # securityContext:
+          #   runAsNonRoot: true
+          #   capabilities:
+          #     drop:
+          #      - SETUID
+          #      - SETGID
           resources:
            limits:
-            memory: "100Mi"
+            memory: "512Mi"
             cpu: 100m
            requests:
-            memory: "50Mi"
+            memory: "256Mi"
             cpu: 100m
           env:
             - name: RABBITMQHOST
