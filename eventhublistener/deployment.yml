@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: eventhub-listener-deployment
+  labels:
+    app: eventhub-listener
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventhub-listener
+  template:
+    metadata:
+      labels:
+        app: eventhub-listener
+    spec:
+      containers:
+        - name: eventhub-listener-0
+          image: shanepeckham/eventhublistenerack:v6
+          env:
+            - name: EVENTHUBCONNSTRING
+              value: "Endpoint=sb://team5orders.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=FF0SwANe0tTw7TN1bu4z4KacAOm01kyaV+8aiCL2zSI="
+            - name: EVENTHUBPATH
+              value: orders
+            - name: TEAMNAME
+              value: team5
+            - name: PROCESSENDPOINT
+              value: http://fulfill-order:8081/v1/order
+            - name: PARTITIONKEY
+              value: "0"
+        - name: eventhub-listener-1
+          image: shanepeckham/eventhublistenerack:v6
+          env:
+            - name: EVENTHUBCONNSTRING
+              value: "Endpoint=sb://team5orders.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=FF0SwANe0tTw7TN1bu4z4KacAOm01kyaV+8aiCL2zSI="
+            - name: EVENTHUBPATH
+              value: orders
+            - name: TEAMNAME
+              value: team5
+            - name: PROCESSENDPOINT
+              value: http://fulfill-order:8081/v1/order
+            - name: PARTITIONKEY
+              value: "1"
+        - name: eventhub-listener-2
+          image: shanepeckham/eventhublistenerack:v6
+          env:
+            - name: EVENTHUBCONNSTRING
+              value: "Endpoint=sb://team5orders.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=FF0SwANe0tTw7TN1bu4z4KacAOm01kyaV+8aiCL2zSI="
+            - name: EVENTHUBPATH
+              value: orders
+            - name: TEAMNAME
+              value: team5
+            - name: PROCESSENDPOINT
+              value: http://fulfill-order:8081/v1/order
+            - name: PARTITIONKEY
+              value: "2"

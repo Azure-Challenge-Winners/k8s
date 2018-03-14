@@ -13,7 +13,7 @@ spec:
   strategy:
     rollingUpdate:
       maxUnavailable: 0
-      maxSurge: 2
+      maxSurge: 3
     type: RollingUpdate
   template:
     metadata:
@@ -21,33 +21,54 @@ spec:
         app: order-capture
     spec:
       containers:
-        - name: order-capture
+        - name: order-capture-0
           image: shanepeckham/captureorderack:v6
-          # securityContext:
-          #   runAsNonRoot: true
-          #   capabilities:
-          #     drop:
-          #      - SETUID
-          #      - SETGID
-          # resources:
-          #  limits:
-          #   memory: "5Gi"
-          #   cpu: 100m
-          #  requests:
-          #   memory: "2Gi"
-          #   cpu: 100m
           ports:
             - containerPort: 8080
           env:
             - name: MONGOHOST
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb-host-secret
-                  key: mongodb-host-secret
+              value: mongodb://team5orders:5lk87DLIPQpHUSkz1EE9oEmQjnDsTtRgj554s6YEvxPPBeya4gTjsBUzC5oUtoZ7e7fvxFELsSd4lmIAJW3bdw==@team5orders.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
             - name: TEAMNAME
-              value: team5
-            - name: RABBITMQHOST
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-host-secret
-                  key: rabbitmq-host-secret
+              value: team5  
+            - name: EVENTURL
+              value: https://team5orders.servicebus.windows.net/orders
+            - name: EVENTPOLICYNAME
+              value: RootManageSharedAccessKey
+            - name: EVENTPOLICYKEY
+              value: FF0SwANe0tTw7TN1bu4z4KacAOm01kyaV+8aiCL2zSI=
+            - name: PARTITIONKEY
+              value: "0"
+        - name: order-capture-1
+          image: shanepeckham/captureorderack:v6
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGOHOST
+              value: mongodb://team5orders:5lk87DLIPQpHUSkz1EE9oEmQjnDsTtRgj554s6YEvxPPBeya4gTjsBUzC5oUtoZ7e7fvxFELsSd4lmIAJW3bdw==@team5orders.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
+            - name: TEAMNAME
+              value: team5  
+            - name: EVENTURL
+              value: https://team5orders.servicebus.windows.net/orders
+            - name: EVENTPOLICYNAME
+              value: RootManageSharedAccessKey
+            - name: EVENTPOLICYKEY
+              value: FF0SwANe0tTw7TN1bu4z4KacAOm01kyaV+8aiCL2zSI=
+            - name: PARTITIONKEY
+              value: "1"
+        - name: order-capture-2
+          image: shanepeckham/captureorderack:v6
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGOHOST
+              value: mongodb://team5orders:5lk87DLIPQpHUSkz1EE9oEmQjnDsTtRgj554s6YEvxPPBeya4gTjsBUzC5oUtoZ7e7fvxFELsSd4lmIAJW3bdw==@team5orders.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
+            - name: TEAMNAME
+              value: team5  
+            - name: EVENTURL
+              value: https://team5orders.servicebus.windows.net/orders
+            - name: EVENTPOLICYNAME
+              value: RootManageSharedAccessKey
+            - name: EVENTPOLICYKEY
+              value: FF0SwANe0tTw7TN1bu4z4KacAOm01kyaV+8aiCL2zSI=
+            - name: PARTITIONKEY
+              value: "2"

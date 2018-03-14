@@ -10,9 +10,49 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1beta1
     kind: Deployment
-    name: order-capture
-  minReplicas: 2
-  maxReplicas: 10
+    name: order-capture-0
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 60
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: order-capture-deployment
+  namespace: default
+  labels:
+    app: order-capture
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: order-capture-1
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 60
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: order-capture-deployment
+  namespace: default
+  labels:
+    app: order-capture
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: order-capture-2
+  minReplicas: 1
+  maxReplicas: 3
   metrics:
   - type: Resource
     resource:
